@@ -7,6 +7,8 @@ fully deterministic: the same bytes on every run.
 
 import os
 
+OUTPUT_PATH = "/output/entry.txt"
+
 TEXT = (
     "The kettle has boiled; the steam is thinning in the late light. "
     "The chair by the window is still warm from the afternoon sun, "
@@ -20,9 +22,11 @@ def main() -> None:
     count = len(text)
     assert 1 <= count <= 280, f"entry must be 1-280 characters, got {count}"
     assert text.strip(), "entry must not be only whitespace"
-    os.makedirs("/output", exist_ok=True)
-    with open("/output/entry.txt", "w", encoding="utf-8", newline="\n") as f:
+    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
+    tmp_path = OUTPUT_PATH + ".tmp"
+    with open(tmp_path, "w", encoding="utf-8", newline="\n") as f:
         f.write(text)
+    os.replace(tmp_path, OUTPUT_PATH)
 
 
 if __name__ == "__main__":
